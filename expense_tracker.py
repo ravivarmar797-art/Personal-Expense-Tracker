@@ -36,7 +36,8 @@ while running:
     print("4.show the total")
     print("5.Exit")
     print("6.edit expense")
-    choice = input("Enter the choice(1-6)")
+    print("7. delete expense")
+    choice = input("Enter the choice(1-7)")
     if choice == "1":
         while True:
             try:
@@ -139,43 +140,65 @@ while running:
     elif choice == "6":
         show_expenses_with_index(expenses)
 
-    if not expenses:
-        continue
-    try:
-        index = int(input("Enter index of expense to edit: "))
-        if index < 0 or index >= len(expenses):
-            print("Invalid index.")
+        if not expenses:
             continue
-    except ValueError:
-        print("Please enter a valid number.")
-        continue
-    expense = expenses[index]
-    print("Press Enter to keep old value")
-    new_item = input(f"New item ({expense['item']}): ").strip()
-    if new_item:
-        expense["item"] = new_item
-    while True:
-        new_amount = input(f"New amount ({expense['amount']}): ").strip()
-        if not new_amount:
-            break
         try:
-            new_amount = float(new_amount)
-            if new_amount > 0:
-                expense["amount"] = new_amount
-                break
-            else:
-                print("Amount must be positive.")
+            index = int(input("Enter index of expense to edit: "))
+            if index < 0 or index >= len(expenses):
+                print("Invalid index.")
+                continue
         except ValueError:
-            print("Enter a valid number.")
-    new_category = input(f"New category ({expense['category']}): ").strip()
-    if new_category:
-        expense["category"] = new_category
-    new_date = input(f"New date ({expense['date']}): ").strip()
-    if new_date:
-        expense["date"] = new_date
-    save_to_file(expenses)
-    print("Expense updated successfully!")
-else:
-    print("invalid expenses")
+            print("Please enter a valid number.")
+            continue
+        expense = expenses[index]
+        print("Press Enter to keep old value")
+        new_item = input(f"New item ({expense['item']}): ").strip()
+        if new_item:
+            expense["item"] = new_item
+        while True:
+            new_amount = input(f"New amount ({expense['amount']}): ").strip()
+            if not new_amount:
+                break
+            try:
+                new_amount = float(new_amount)
+                if new_amount > 0:
+                    expense["amount"] = new_amount
+                    break
+                else:
+                    print("Amount must be positive.")
+            except ValueError:
+                print("Enter a valid number.")
+        new_category = input(f"New category ({expense['category']}): ").strip()
+        if new_category:
+            expense["category"] = new_category
+        new_date = input(f"New date ({expense['date']}): ").strip()
+        if new_date:
+            expense["date"] = new_date
+        save_to_file(expenses)
+        print("Expense updated successfully!")
+
+    elif choice == "7":
+        show_expenses_with_index(expenses)
+
+        if not expenses:
+            continue
+
+        try:
+            index = int(input("Enter index to delete: "))
+            if index < 0 or index >= len(expenses):
+                print("Invalid index.")
+                continue
+        except ValueError:
+            print("Please enter a number.")
+            continue
+
+        confirm = input("Are you sure? (y/n): ").lower()
+        if confirm == "y":
+            del expenses[index]
+            save_to_file(expenses)
+            print("Expense deleted successfully!")
+        else:
+            print("Delete cancelled.")
+   
 
 
