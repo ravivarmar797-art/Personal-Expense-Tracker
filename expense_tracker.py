@@ -36,7 +36,22 @@ while running:
                 f"{expense['amount']:>7.2f}"
             )
     elif choice == "3":
-        print("view expense by category selected")
+        category_filter = input("Enter category to filter: ")
+        found = False
+        print("\nDate     item        category           amount")
+        print("-" * 60)
+        for expense in expenses:
+            if expense["category"].lower() == category_filter.lower():
+                found = True
+                print(
+                        f"{expense['date']:<12} "
+                        f"{expense['item']:<20} "
+                        f"{expense['category']:<15} "
+                        f"{expense['amount']:>7.2f}"
+                    )
+            if not found:
+                print("no expenses for this category.")
+        
     elif choice == "4":
         print("show the total selected")
     elif choice == "5":
