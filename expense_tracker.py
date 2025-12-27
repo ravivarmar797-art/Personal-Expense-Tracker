@@ -1,5 +1,16 @@
-expenses = []
+import json
+
 running = True
+def save_to_file(expenses):
+    with open("expenses.json", "w") as file:
+        json.dump(expenses, file)
+def load_from_file():
+    try:
+        with open("expenses.json", "r") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return []
+expenses = load_from_file()
 while running:
     print("\n------personal expense tracker-------")
     print("1.add expenses")
@@ -19,8 +30,9 @@ while running:
             "amount":amount,
             "category":category,
             "date":date
-        } 
-        expenses.append(expense)
+        }
+        expenses.append(expense)  
+        save_to_file(expenses)
         print("Expense added successfully!")
     elif choice == "2":
         if not expenses:
@@ -28,13 +40,13 @@ while running:
         else:
             print("\nDate    item    category   amount")
             print("-" * 60)
-        for expense in expenses:
-            print(
-                f"{expense['date']:<12} "
-                f"{expense['item']:<20} "
-                f"{expense['category']:<15} "
-                f"{expense['amount']:>7.2f}"
-            )
+            for expense in expenses:
+                print(
+                    f"{expense['date']:<12} "
+                    f"{expense['item']:<20} "
+                    f"{expense['category']:<15} "
+                    f"{expense['amount']:>7.2f}"
+                )
     elif choice == "3":
         category_filter = input("Enter category to filter: ")
         found = False
@@ -49,8 +61,8 @@ while running:
                         f"{expense['category']:<15} "
                         f"{expense['amount']:>7.2f}"
                     )
-            if not found:
-             print("no expenses for this category.")
+        if not found:
+            print("no expenses for this category.")
         
     elif choice == "4":
         if not expenses:
@@ -62,9 +74,9 @@ while running:
                 amount = expense["amount"]
                 category = expense["category"]
 
-            total += amount
+                total += amount
             if category in category_totals:
-             category_totals[category] += amount
+                category_totals[category] += amount
             else:
                 category_totals[category] = amount
             
@@ -78,6 +90,7 @@ while running:
     
 
     elif choice == "5":
+        save_to_file(expenses)
         print("Exiting program")
         running = False
     
