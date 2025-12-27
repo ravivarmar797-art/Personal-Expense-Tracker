@@ -23,7 +23,18 @@ while running:
         expenses.append(expense)
         print("Expense added successfully!")
     elif choice == "2":
-        print("view expense selected")
+        if not expenses:
+            print("no expenses recorded yet.")
+        else:
+            print("\nDate    item    category   amount")
+            print("-" * 60)
+        for expense in expenses:
+            print(
+                f"{expense['date']:<12} "
+                f"{expense['item']:<20} "
+                f"{expense['category']:<15} "
+                f"{expense['amount']:>7.2f}"
+            )
     elif choice == "3":
         print("view expense by category selected")
     elif choice == "4":
