@@ -10,6 +10,23 @@ def load_from_file():
             return json.load(file)
     except FileNotFoundError:
         return []
+def show_expenses_with_index(expenses):
+    if not expenses:
+        print("No expenses to show.")
+        return
+
+    print("\nIndex  Date         Item                 Category        Amount")
+    print("-" * 70)
+
+    for i, expense in enumerate(expenses):
+        print(
+            f"{i:<6} "
+            f"{expense['date']:<12} "
+            f"{expense['item']:<20} "
+            f"{expense['category']:<15} "
+            f"{expense['amount']:>7.2f}"
+        )
+
 expenses = load_from_file()
 while running:
     print("\n------personal expense tracker-------")
@@ -18,12 +35,37 @@ while running:
     print("3.view by caterogy")
     print("4.show the total")
     print("5.Exit")
-    choice = input("Enter the choice(1-5)")
+    print("6.edit expense")
+    choice = input("Enter the choice(1-6)")
     if choice == "1":
-        item = input("Enter item name: ")
-        amount = float(input("Enter amount: "))
-        category = input("Enter category: ")
-        date = input("Enter date (YYYY-MM-DD): ")
+        while True:
+            try:
+                amount = float(input("Enter amount: "))
+                if amount <= 0:
+                    print("Amount must be greater than zero.")
+                else:
+                    break
+            except ValueError:
+                print("Invalid amount. Please enter a number.")
+        while True:
+            item = input("Enter item name: ").strip()
+            if item:
+                break
+            else:
+                print("Item name cannot be empty.")
+
+        while True:
+            category = input("Enter category: ").strip()
+            if category:
+                break
+            else:
+                print("Category cannot be empty.")
+        while True:
+            date = input("Enter date (YYYY-MM-DD): ").strip()
+            if len(date) == 10 and date[4] == "-" and date[7] == "-":
+                break
+            else:
+                print("Date must be in YYYY-MM-DD format.")
 
         expense = {
             "item": item,
@@ -94,7 +136,46 @@ while running:
         print("Exiting program")
         running = False
     
-    else:
-        print("invalid choice. pls enter 1 to 5.")
+    elif choice == "6":
+        show_expenses_with_index(expenses)
+
+    if not expenses:
+        continue
+    try:
+        index = int(input("Enter index of expense to edit: "))
+        if index < 0 or index >= len(expenses):
+            print("Invalid index.")
+            continue
+    except ValueError:
+        print("Please enter a valid number.")
+        continue
+    expense = expenses[index]
+    print("Press Enter to keep old value")
+    new_item = input(f"New item ({expense['item']}): ").strip()
+    if new_item:
+        expense["item"] = new_item
+    while True:
+        new_amount = input(f"New amount ({expense['amount']}): ").strip()
+        if not new_amount:
+            break
+        try:
+            new_amount = float(new_amount)
+            if new_amount > 0:
+                expense["amount"] = new_amount
+                break
+            else:
+                print("Amount must be positive.")
+        except ValueError:
+            print("Enter a valid number.")
+    new_category = input(f"New category ({expense['category']}): ").strip()
+    if new_category:
+        expense["category"] = new_category
+    new_date = input(f"New date ({expense['date']}): ").strip()
+    if new_date:
+        expense["date"] = new_date
+    save_to_file(expenses)
+    print("Expense updated successfully!")
+else:
+    print("invalid expenses")
 
 
