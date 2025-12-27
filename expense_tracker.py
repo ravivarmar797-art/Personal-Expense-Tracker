@@ -50,10 +50,33 @@ while running:
                         f"{expense['amount']:>7.2f}"
                     )
             if not found:
-                print("no expenses for this category.")
+             print("no expenses for this category.")
         
     elif choice == "4":
-        print("show the total selected")
+        if not expenses:
+            print("no expenses record yet.")
+        else:
+            total = 0
+            category_totals = {}
+            for expense in expenses:
+                amount = expense["amount"]
+                category = expense["category"]
+
+            total += amount
+            if category in category_totals:
+             category_totals[category] += amount
+            else:
+                category_totals[category] = amount
+            
+        print(f"\ntotal spending: {total:.2f}\n")
+        print("category breakdown:")
+        print("_" * 25)
+    
+        for category, amount in category_totals.items():
+            print(f"{category:<15} {amount:>8.2F}")
+    
+    
+
     elif choice == "5":
         print("Exiting program")
         running = False
